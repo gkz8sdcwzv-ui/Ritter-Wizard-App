@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d1230">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wizard">
+<title>Wizard Super Power App</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧙‍♂️</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <span class="logo">🧙‍♂️ WIZARD</span>
+  <span class="logo-sub">Super Power App</span>
+</header>
+<main id="app"></main>
+<nav>
+  <button data-act="nav" data-view="game"><span>🃏</span>Spiel</button>
+  <button data-act="nav" data-view="fame"><span>🏛️</span>Ruhmeshalle</button>
+  <button data-act="nav" data-view="players"><span>🧙</span>Zauberer</button>
+  <button data-act="nav" data-view="history"><span>📚</span>Historie</button>
+</nav>
+<script src="js/core.js"></script>
+<script src="js/demo.js"></script>
+<script src="js/ui-game.js"></script>
+<script src="js/ui-chart.js"></script>
+<script src="js/ui-stats.js"></script>
+<script>render();</script>
+</body>
+</html>
