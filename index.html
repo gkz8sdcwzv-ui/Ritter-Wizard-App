@@ -15,6 +15,7 @@
 <header class="top">
   <span class="logo">🧙‍♂️ WIZARD</span>
   <span class="logo-sub">Super Power App</span>
+  <button id="syncDot" class="sync-dot" data-act="nav" data-view="history" hidden></button>
 </header>
 <main id="app"></main>
 <nav>
@@ -23,11 +24,13 @@
   <button data-act="nav" data-view="players"><span>🧙</span>Zauberer</button>
   <button data-act="nav" data-view="history"><span>📚</span>Historie</button>
 </nav>
-<script src="core.js"></script>
-<script src="demo.js"></script>
-<script src="ui-game.js"></script>
-<script src="ui-chart.js"></script>
-<script src="ui-stats.js"></script>
-<script>render();</script>
+<script src="js/core.js"></script>
+<script src="js/demo.js"></script>
+<script src="js/ui-game.js"></script>
+<script src="js/ui-chart.js"></script>
+<script src="js/ui-stats.js"></script>
+<script src="js/ui-scan.js"></script>
+<script src="js/sync.js"></script>
+<script>render(); syncInit();</script>
 </body>
 </html>

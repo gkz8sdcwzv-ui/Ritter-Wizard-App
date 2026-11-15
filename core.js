@@ -22,6 +22,7 @@ function loadDb() {
 function saveDb() {
   try { localStorage.setItem(STORE_KEY, JSON.stringify(db)); }
   catch (e) { alert('Speichern fehlgeschlagen: ' + e.message); }
+  if (typeof syncMarkDirty === 'function') syncMarkDirty();   // gemeinsamer Spielstand, siehe sync.js
 }
 
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }

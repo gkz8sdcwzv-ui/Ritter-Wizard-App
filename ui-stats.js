@@ -158,16 +158,18 @@ ACT.deletePlayer = () => {
 /* ================= Historie ================= */
 
 VIEWS.history = () => {
+  if (ui.scan) return scanHtml();
   const g = ui.histGid && db.games.find(x => x.id === ui.histGid);
   if (g) return gameDetailHtml(g);
   const list = db.games.filter(x => x.status !== 'active').sort((a, b) => b.started - a.started);
   return `
   <h2 class="sec">📚 Gespielte Partien <small>${list.length}</small></h2>
+  <button class="btn gold big" data-act="scanOpen">📷 Alten Block einscannen</button>
   <div class="hlist">${list.map(x => {
     const c = calcGame(x), order = [...Array(c.n).keys()].sort((a, b) => c.total[b] - c.total[a]);
     return `<button class="hcard" data-act="openGame" data-gid="${x.id}">
       <span class="hd">${fmtDate(x.started)} · ${c.n} Spieler · ${c.rows.length} Runden
-        ${x.status === 'aborted' ? '<span class="tag">abgebrochen</span>' : ''}${x.demo ? '<span class="tag blue">Demo</span>' : ''}</span>
+        ${x.status === 'aborted' ? '<span class="tag">abgebrochen</span>' : ''}${x.demo ? '<span class="tag blue">Demo</span>' : ''}${x.imported ? '<span class="tag blue">eingescannt</span>' : ''}</span>
       <span class="hp">${order.map(i => `<span class="${c.place[i] === 1 && x.status === 'finished' ? 'win' : ''}">${c.place[i] === 1 && x.status === 'finished' ? '👑 ' : ''}${esc(pName(x.playerIds[i]))} <b>${c.total[i]}</b></span>`).join('')}</span>
     </button>`;
   }).join('') || '<p class="hint center">Noch keine abgeschlossenen Partien.</p>'}</div>
@@ -198,9 +200,10 @@ ACT.deleteGame = d => {
 /* ================= Daten & Einstellungen ================= */
 
 function settingsHtml() {
-  return `<section class="card">
+  return `${syncCardHtml()}<section class="card">
     <h3>⚙️ Daten</h3>
-    <p class="hint">Alles wird lokal in diesem Browser gespeichert. Mit der Sicherung kannst du die Daten auf ein anderes Gerät mitnehmen.</p>
+    <p class="hint">${sync.code ? 'Der Stand liegt in eurer Gruppe und zusätzlich auf diesem Gerät. Eine Sicherung als Datei schadet trotzdem nie.'
+      : 'Alles wird lokal in diesem Browser gespeichert. Mit der Sicherung kannst du die Daten auf ein anderes Gerät mitnehmen.'}</p>
     <div class="btnrow wrap">
       <button class="btn" data-act="exportDb">⬇️ Sicherung speichern</button>
       <button class="btn" data-act="importDb">⬆️ Sicherung laden</button>
@@ -227,7 +230,7 @@ ACT.importDb = () => {
       let d;
       try { d = JSON.parse(txt); } catch (e) { d = null; }
       if (!d || !Array.isArray(d.players) || !Array.isArray(d.games)) { alert('Das ist keine gültige Wizard-Sicherung.'); return; }
-      if (!confirm(`Sicherung mit ${d.players.length} Spielern und ${d.games.length} Partien laden? Die aktuellen Daten in diesem Browser werden ersetzt.`)) return;
+      if (!confirm(`Sicherung mit ${d.players.length} Spielern und ${d.games.length} Partien laden? Die aktuellen Daten ${sync.code ? 'der ganzen Gruppe' : 'in diesem Browser'} werden ersetzt.`)) return;
       db = d; ui.resultGid = null; ui.setup.sel = [];
       saveDb(); render();
     });
@@ -240,7 +243,8 @@ ACT.demoRemove = () => {
   removeDemoData(); render();
 };
 ACT.resetDb = () => {
-  if (!confirm('Wirklich ALLE Spieler, Partien und Statistiken löschen?')) return;
+  if (!confirm(sync.code ? 'Wirklich ALLE Spieler, Partien und Statistiken löschen – für ALLE Geräte der Gruppe?'
+    : 'Wirklich ALLE Spieler, Partien und Statistiken löschen?')) return;
   if (!confirm('Sicher? Das lässt sich nicht rückgängig machen.')) return;
   db = emptyDb(); ui.resultGid = null; ui.setup.sel = [];
   saveDb(); go('game');

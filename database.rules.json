@@ -1,0 +1,10 @@
+{
+  "rules": {
+    "groups": {
+      "$code": {
+        ".read": "$code.length >= 12",
+        ".write": "$code.length >= 12"
+      }
+    }
+  }
+}
